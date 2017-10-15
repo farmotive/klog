@@ -146,12 +146,12 @@ else
   if [[ $(con_count) -gt 1 ]]; then
     echo 'Container number? (default 1):'; con_number_list; read CON;
     if [[ $(po_con_log | wc -c) -eq 0 ]]; then
-     echo "The selected pod has no logs.";
+     echo "The selected container has no logs.";
     fi
     po_con_log
   fi
     if [[ $(po_log | wc -c) -eq 0 ]]; then
-     echo "The selected pod has no logs.";
+     echo "The selected container has no logs.";
     fi
     po_log
 fi
