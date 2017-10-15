@@ -1,4 +1,4 @@
-The purpose of `klog` is to avoid mouse interaction while retrieving logs from k8s pods.  Traditionally, if one wanted to exec into a kubernetes container, one had to `kubectl get pods --namespace foo`, visually identify the pod of interest, copy that pod to the buffer, and then `kubectl --namespace foo logs <paste_buffer>` to retrieve the pod's logs.  This simple utility aims to provide a namespace-specific pod selector for quick execution.
+The purpose of `klog` is to avoid mouse interaction while retrieving logs from k8s pods.  Traditionally, if one wanted to retrieve logs from a kubernetes container, one had to `kubectl get pods --namespace foo`, visually identify the pod of interest, copy that pod to the buffer, and then `kubectl --namespace foo logs <paste_buffer>` to retrieve the pod's logs.  Moreover, if the pod has `n`+1 containers, one had to identify the container of interest and pass this variable with the `-c` flag.  This simple utility aims to provide a namespace-specific pod[.container] selector for quick execution.
 
 # klog
 
@@ -35,7 +35,7 @@ SEE ALSO
 ### USAGE
 
 ```sh
-$ kex
+$ klog
 Namespace? (default qux):
     1 qux
     2 quux
@@ -54,11 +54,7 @@ Pod number? (default 1):
     2 bar-mariadb
     3 baz-alpine
 2
-Command? (default bash)
-mysql
-
-Welcome to the MariaDB monitor.  Commands end with ; or \g.
-MariaDB [NAME]>
+The selected container has no logs.
 ```
 
 ## Installation
@@ -68,18 +64,18 @@ MariaDB [NAME]>
 Use the [Homebrew](https://brew.sh/) package manager:
 ```sh
 brew tap farmotive/k8s
-brew install kex
+brew install klog
 ```
 **NOTE:** If using gcloud sdk to manage the installation and versioning of `kubectl`, install with the `--without-kubernetes-cli` flag to omit the brew dependency:
 ```sh
-brew install kex --without-kubernetes-cli
+brew install klog --without-kubernetes-cli
 ```
 
 See [farmotive homebrew k8s install section](https://github.com/farmotive/homebrew-k8s#install) for more options.
 
 **Other platforms:**
 
-- Download the `kex` script
+- Download the `klog` script
 - Add it somewhere in your PATH
 - Make it executable (`chmod +x`)
 
