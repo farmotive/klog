@@ -2,7 +2,7 @@ The purpose of `klog` is to avoid mouse interaction while retrieving logs from k
 
 # klog
 
-#[![asciicast](https://asciinema.org/a/placeholder.png)](https://asciinema.org/a/placeholder)
+#[![asciicast](https://asciinema.org/a/142542.png)](https://asciinema.org/a/142542)
 
 ```sh
 klog(1)
