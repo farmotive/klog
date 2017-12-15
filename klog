@@ -35,9 +35,11 @@ DESCRIPTION
 OPTIONS
     -h, --help
         Show this help message
+    -f, --follow
+        See kubectl -follow
 
 SEE ALSO
-    kubectx(1), kubens(1)
+    kubectx(1), kubens(1), kubectl(1)
 EOF
 }
 
@@ -106,14 +108,30 @@ con_count() {
   con_list | wc -w
 }
 
-po_log() {
-  kubectl $(ns_param) \
-    logs $(po_select)
+co_param() {
+  local container=$(con_select)
+  if [[ $(con_count) -gt 1 && ! -z ${container:-} ]]; then
+    echo "--container=${container}"
+  fi
 }
 
-po_con_log() {
+# Arg 1: bool
+#   Whether or not to kubectl --follow.
+po_log() {
+  if [[ ${1:-} == 'true' ]]; then
+    FOLLOW_STRING="--follow"
+  fi
+
   kubectl $(ns_param) \
-    logs $(po_select) -c $(con_select)
+    logs $(po_select) $(co_param) ${FOLLOW_STRING:-}
+}
+
+po_log_follow() {
+  if [[ ${FOLLOW:-} == 'true' ]]; then
+    FOLLOW_BOOL='true'
+  fi
+
+  po_log ${FOLLOW_BOOL:-}
 }
 
 # Transform long options to short ones. Sick trick.
@@ -122,13 +140,15 @@ for arg in "$@"; do
   shift
   case "$arg" in
     "--help")       set -- "$@" "-h" ;;
+    "--follow")     set -- "$@" "-f" ;;
     *)              set -- "$@" "$arg"
   esac
 done
 
-while getopts :h OPT; do
+while getopts :hf OPT; do
   case $OPT in
     h ) HELP=true;;
+    f ) FOLLOW=true;;
     \?) echo "Unknown option: -$OPTARG" >&2; exit 1;;
     : ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
   esac
@@ -145,13 +165,9 @@ else
 
   if [[ $(con_count) -gt 1 ]]; then
     echo 'Container number? (default 1):'; con_number_list; read CON;
-    if [[ $(po_con_log | wc -c) -eq 0 ]]; then
-     echo "The selected container has no logs."; exit 0
-    fi
-    po_con_log; exit 0
-  fi
     if [[ $(po_log | wc -c) -eq 0 ]]; then
      echo "The selected container has no logs."; exit 0
     fi
-    po_log
+  fi
+  po_log_follow; exit 0
 fi
